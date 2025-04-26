@@ -1,6 +1,6 @@
 ###############################################################################
 # Self-published geofeed as defined in datatracker.ietf.org/doc/html/rfc8805
-# published at Apr 26, 2025, 11:05:06 PM UTC
+# published at Apr 26, 2025 11:05:06 PM UTC
 # published by kezod.xyz - Kezod Technologies
 ###############################################################################
 
@@ -55,6 +55,7 @@
 2a01:7e03::/32,US,US-CA,Los Angeles,
 2600:3c0f:30::/48,US,US-CA,Los Angeles,
 2600:3c12:0b00::/40,NZ,NZ-AUK,Auckland,
+89.203.249.181/32,TF,,Port-aux-Francais,
 2600:3c0f:32::/48,NZ,NZ-AUK,Auckland,
 2600:3c12:0a00::/40,US,US-CO,Denver,
 2600:3c0f:34::/48,US,US-CO,Denver,
