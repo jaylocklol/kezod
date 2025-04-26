@@ -168,40 +168,6 @@
             outline: none;
         }
 
-        /* Custom Select with Input */
-        .select-container {
-            position: relative;
-        }
-
-        .select-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--medium-gray);
-            border-radius: 5px;
-            font-size: 1rem;
-            background-color: var(--white);
-            transition: all 0.3s;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            padding-right: 40px;
-        }
-
-        .select-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(110, 59, 206, 0.2);
-            outline: none;
-        }
-
-        .select-arrow {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: var(--text-color);
-        }
-
         .datalist-input {
             width: 100%;
             padding: 12px 15px;
@@ -489,11 +455,24 @@
             const now = new Date();
             const timestamp = Math.floor(now.getTime() / 1000);
             
+            // Format current date and time in GMT
+            const dateOptions = { 
+                timeZone: 'GMT',
+                year: 'numeric', 
+                month: 'short', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            const formattedDate = now.toLocaleString('en-US', dateOptions);
+            
             // Split the country data into code and city
             const [countryCode, city] = countryData.split(',');
             
             // Create our line to insert
-            const ourLine = `${ip}/32,${countryCode},,${city},\n`;
+            const ourLine = `${ip}/32,${countryCode},,${city},`;
             
             // Get the random IPs
             const randomIPs = await fetchRandomIPs();
@@ -503,10 +482,16 @@
             
             // Insert our line at random position
             const randomPosition = Math.floor(Math.random() * (selectedRandomIPs.length + 1));
-            selectedRandomIPs.splice(randomPosition, 0, ourLine.trim());
+            selectedRandomIPs.splice(randomPosition, 0, ourLine);
+            
+            // Create RFC header
+            const header = `###############################################################################\n` +
+                          `# Self-published geofeed as defined in datatracker.ietf.org/doc/html/rfc8805\n` +
+                          `# Generated at ${formattedDate}\n` +
+                          `###############################################################################\n\n`;
             
             // Combine all lines
-            const csvContent = selectedRandomIPs.join('\n') + '\n';
+            const csvContent = header + selectedRandomIPs.join('\n') + '\n';
             
             return {
                 content: csvContent,
