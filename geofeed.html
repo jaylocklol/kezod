@@ -395,7 +395,7 @@
         <div class="container">
             <header class="dashboard-header animate__animated animate__fadeIn">
                 <h1 class="dashboard-title">Geofeed Generator</h1>
-                <p class="dashboard-subtitle">Generate accurate geofeed CSV files for IP address corrections with Kezod's precision geolocation technology.</p>
+                <p class="dashboard-subtitle">Generate accurate geofeed CSV files with your IP inserted among 499 random entries.</p>
             </header>
 
             <div class="generator-card animate__animated animate__fadeInUp">
@@ -406,7 +406,7 @@
 
                 <div class="form-group">
                     <label for="country-code" class="form-label">Country Code & City</label>
-                    <input list="country-options" id="country-code" class="datalist-input" placeholder="Type or select a country..." required>
+                    <input list="country-options" id="country-code" class="datalist-input" placeholder="Type or select a country (e.g. US,New York)" required>
                     <datalist id="country-options">
                         <!-- Options will be populated by JavaScript -->
                     </datalist>
@@ -471,22 +471,42 @@
             });
         }
 
+        // Fetch random IPs from the text file
+        async function fetchRandomIPs() {
+            const response = await fetch('https://files.catbox.moe/0j5m52.txt');
+            const textData = await response.text();
+            return textData.split('\n').filter(line => line.trim());
+        }
+
         // Validate IP address
         function validateIP(ip) {
             const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
             return ipv4Regex.test(ip);
         }
 
-        // Generate CSV content
-        function generateCSV(ip, countryData) {
+        // Generate CSV content with random IPs and inserted line
+        async function generateCSV(ip, countryData) {
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0];
             const timestamp = Math.floor(now.getTime() / 1000);
             
             // Split the country data into code and city
             const [countryCode, city] = countryData.split(',');
             
-            let csvContent = `# IP Geofeed Change Request Administered By Kezod.xyz\n# Submitted For ${ip}\n\n${ip}/32,${countryCode},,${city},\n`;
+            // Create our line to insert
+            const ourLine = `${ip}/32,${countryCode},,${city},\n`;
+            
+            // Get the random IPs
+            const randomIPs = await fetchRandomIPs();
+            
+            // Ensure we have enough random IPs (take first 499)
+            const selectedRandomIPs = randomIPs.slice(0, 499);
+            
+            // Insert our line at random position
+            const randomPosition = Math.floor(Math.random() * (selectedRandomIPs.length + 1));
+            selectedRandomIPs.splice(randomPosition, 0, ourLine.trim());
+            
+            // Combine all lines
+            const csvContent = selectedRandomIPs.join('\n') + '\n';
             
             return {
                 content: csvContent,
@@ -552,20 +572,17 @@
             
             // Show loading state
             this.disabled = true;
-            btnText.innerHTML = '<span class="loading"></span> Generating...';
+            btnText.innerHTML = '<span class="loading"></span> Generating 500-line CSV...';
             
-            // Simulate processing delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Generate and download CSV
             try {
-                const { content, filename } = generateCSV(ip, countryData);
+                // Generate and download CSV
+                const { content, filename } = await generateCSV(ip, countryData);
                 downloadCSV(content, filename);
                 
-                messageDiv.textContent = 'Geofeed generated and downloaded successfully!';
+                messageDiv.textContent = '500-line CSV generated and downloaded successfully!';
                 messageDiv.className = 'message success';
             } catch (error) {
-                messageDiv.textContent = 'Error generating geofeed: ' + error.message;
+                messageDiv.textContent = 'Error generating CSV: ' + error.message;
                 messageDiv.className = 'message error';
             }
             
