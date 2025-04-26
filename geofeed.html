@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kezod Technologies | Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6e3bce;
+            --primary-light: #9a67f5;
+            --primary-dark: #4a1d9b;
+            --white: #ffffff;
+            --light-gray: #f5f5f7;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333333;
+            --text-color: #2d2d2d;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        .logo {
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .kezod {
+            color: var(--primary-color);
+        }
+
+        .tech {
+            color: var(--dark-gray);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Dashboard Main */
+        .dashboard {
+            padding: 180px 0 100px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Generator Card */
+        .generator-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(110, 59, 206, 0.2);
+            outline: none;
+        }
+
+        /* Custom Select with Input */
+        .select-container {
+            position: relative;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: var(--white);
+            transition: all 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+        }
+
+        .select-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(110, 59, 206, 0.2);
+            outline: none;
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-color);
+        }
+
+        .datalist-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .datalist-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(110, 59, 206, 0.2);
+            outline: none;
+        }
+
+        .generate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(110, 59, 206, 0.3);
+        }
+
+        .generate-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(110, 59, 206, 0.4);
+        }
+
+        .generate-btn:disabled {
+            background-color: var(--medium-gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            display: block;
+        }
+
+        .success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 50px 0 20px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--white);
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .dashboard {
+                padding: 150px 0 80px;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .generator-card {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo animate__animated animate__fadeIn">
+                <span class="kezod">KEZOD</span>
+                <span class="tech">TECHNOLOGIES</span>
+            </a>
+            <div class="nav-links">
+                <a href="/index.html" class="nav-link">Back to Main Site</a>
+            </div>
+            <div class="mobile-menu-btn">☰</div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main -->
+    <main class="dashboard">
+        <div class="container">
+            <header class="dashboard-header animate__animated animate__fadeIn">
+                <h1 class="dashboard-title">Geofeed Generator</h1>
+                <p class="dashboard-subtitle">Generate accurate geofeed CSV files for IP address corrections with Kezod's precision geolocation technology.</p>
+            </header>
+
+            <div class="generator-card animate__animated animate__fadeInUp">
+                <div class="form-group">
+                    <label for="ip-address" class="form-label">IP Address</label>
+                    <input type="text" id="ip-address" class="form-input" placeholder="e.g. 192.168.1.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country-code" class="form-label">Country Code & City</label>
+                    <input list="country-options" id="country-code" class="datalist-input" placeholder="Type or select a country..." required>
+                    <datalist id="country-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </datalist>
+                </div>
+
+                <button id="generate-btn" class="generate-btn">
+                    <span id="btn-text">Generate Geofeed</span>
+                </button>
+
+                <div id="message" class="message"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="kezod">KEZOD</span>
+                    <span class="tech">TECHNOLOGIES</span>
+                </div>
+                <div class="footer-links">
+                    <a href="/index.html">Main Site</a>
+                    <a href="#">Support</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © <span id="year"></span> Kezod Technologies. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+            this.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Load country codes from the CSV
+        async function loadCountryCodes() {
+            const datalist = document.getElementById('country-options');
+            const response = await fetch('https://daily-grizzly-act.glitch.me/ref.csv');
+            const csvData = await response.text();
+            
+            // Parse CSV
+            const lines = csvData.split('\n');
+            lines.forEach(line => {
+                if (line.trim()) {
+                    const [code, city] = line.split(',');
+                    const option = document.createElement('option');
+                    option.value = `${code},${city}`;
+                    option.textContent = `${code} - ${city}`;
+                    datalist.appendChild(option);
+                }
+            });
+        }
+
+        // Validate IP address
+        function validateIP(ip) {
+            const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            return ipv4Regex.test(ip);
+        }
+
+        // Generate CSV content
+        function generateCSV(ip, countryData) {
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const timestamp = Math.floor(now.getTime() / 1000);
+            
+            // Split the country data into code and city
+            const [countryCode, city] = countryData.split(',');
+            
+            let csvContent = `# IP Geofeed Change Request Administered By Kezod.xyz\n# Submitted For ${ip}\n\n${ip}/32,${countryCode},,${city},\n`;
+            
+            return {
+                content: csvContent,
+                filename: `kezod-xyz-feed-${timestamp}.csv`
+            };
+        }
+
+        // Download CSV
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Handle form submission
+        document.getElementById('generate-btn').addEventListener('click', async function() {
+            const ipInput = document.getElementById('ip-address');
+            const countryInput = document.getElementById('country-code');
+            const messageDiv = document.getElementById('message');
+            const btnText = document.getElementById('btn-text');
+            
+            const ip = ipInput.value.trim();
+            const countryData = countryInput.value.trim();
+            
+            // Reset message
+            messageDiv.className = 'message';
+            messageDiv.textContent = '';
+            messageDiv.style.display = 'none';
+            
+            // Validate inputs
+            if (!ip) {
+                messageDiv.textContent = 'Please enter an IP address';
+                messageDiv.className = 'message error';
+                return;
+            }
+            
+            if (!validateIP(ip)) {
+                messageDiv.textContent = 'Please enter a valid IPv4 address';
+                messageDiv.className = 'message error';
+                return;
+            }
+            
+            if (!countryData) {
+                messageDiv.textContent = 'Please select or enter a country code and city';
+                messageDiv.className = 'message error';
+                return;
+            }
+            
+            // Validate country data format (code,city)
+            if (!countryData.includes(',')) {
+                messageDiv.textContent = 'Please use the format "CODE,CITY" (e.g. US,New York)';
+                messageDiv.className = 'message error';
+                return;
+            }
+            
+            // Show loading state
+            this.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span> Generating...';
+            
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Generate and download CSV
+            try {
+                const { content, filename } = generateCSV(ip, countryData);
+                downloadCSV(content, filename);
+                
+                messageDiv.textContent = 'Geofeed generated and downloaded successfully!';
+                messageDiv.className = 'message success';
+            } catch (error) {
+                messageDiv.textContent = 'Error generating geofeed: ' + error.message;
+                messageDiv.className = 'message error';
+            }
+            
+            // Reset button
+            this.disabled = false;
+            btnText.textContent = 'Generate Geofeed';
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCountryCodes().catch(error => {
+                console.error('Error loading country codes:', error);
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = 'Error loading country codes. Please refresh the page.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
