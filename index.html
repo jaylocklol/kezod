@@ -418,10 +418,67 @@
             text-align: left;
         }
 
+        /* Partners Section */
+        .partners {
+            padding: 100px 0;
+            background-color: var(--white);
+            text-align: center;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            align-items: center;
+            justify-items: center;
+            margin-top: 50px;
+        }
+
+        .partner-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            max-width: 200px;
+            width: 100%;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .partner-card.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .partner-card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .partner-logo {
+            max-width: 100%;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .partner-card:hover .partner-logo {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
         /* About Section */
         .about {
             padding: 100px 0;
-            background-color: var(--white);
+            background-color: var(--light-gray);
         }
 
         .about-content {
@@ -453,7 +510,7 @@
         .stat {
             text-align: center;
             padding: 20px;
-            background-color: var(--light-gray);
+            background-color: var(--white);
             border-radius: 10px;
             transition: all 0.3s;
             opacity: 0;
@@ -490,7 +547,7 @@
             transition: color 0.3s;
         }
 
-        /* Demo Section (replacing contact) */
+        /* Demo Section */
         .demo {
             padding: 100px 0;
             background-color: var(--primary-color);
@@ -626,6 +683,11 @@
             .feature-text p {
                 text-align: center;
             }
+
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -647,6 +709,10 @@
                 gap: 10px;
                 text-align: center;
             }
+
+            .partners-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -661,6 +727,7 @@
             <div class="nav-links">
                 <a href="#solutions" class="nav-link">Solutions</a>
                 <a href="#technology" class="nav-link">Technology</a>
+                <a href="#partners" class="nav-link">Partners</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#demo" class="nav-link">Demo</a>
             </div>
@@ -753,6 +820,17 @@
         </div>
     </section>
 
+    <!-- Partners Section -->
+    <section id="partners" class="partners">
+        <div class="container">
+            <h2 class="section-title animate__animated animate__fadeIn">Trusted Partners</h2>
+            <p class="tech-description animate__animated animate__fadeIn">We collaborate with industry leaders to deliver the most accurate IP geolocation solutions.</p>
+            <div class="partners-grid" id="partnersGrid">
+                <!-- Partners will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
@@ -797,6 +875,7 @@
                 <div class="footer-links">
                     <a href="#solutions">Solutions</a>
                     <a href="#technology">Technology</a>
+                    <a href="#partners">Partners</a>
                     <a href="#about">About</a>
                     <a href="#demo">Demo</a>
                 </div>
@@ -835,12 +914,50 @@
             });
         });
 
+        // Partners data - Add your partners here
+        const partners = [
+            {
+                name: "IPBase",
+                logo: "https://ipbase.com/img/ipbase_logo.svg",
+                url: "https://ipbase.com/"
+            },
+            {
+                name: "IP Ultra Lookup",
+                logo: "https://files.catbox.moe/91544q.png",
+                url: "http://lookup.ipultra.com/"
+            }
+        ];
+
+        // Dynamically generate partner cards
+        function renderPartners() {
+            const partnersGrid = document.getElementById('partnersGrid');
+            partnersGrid.innerHTML = '';
+            
+            partners.forEach((partner, index) => {
+                const partnerCard = document.createElement('a');
+                partnerCard.href = partner.url;
+                partnerCard.target = "_blank";
+                partnerCard.rel = "noopener noreferrer";
+                partnerCard.className = 'partner-card';
+                partnerCard.innerHTML = `
+                    <img src="${partner.logo}" alt="${partner.name}" class="partner-logo">
+                `;
+                partnersGrid.appendChild(partnerCard);
+                
+                // Add animation with delay
+                setTimeout(() => {
+                    partnerCard.classList.add('animated');
+                }, 100 * index);
+            });
+        }
+
         // Enhanced animation on scroll
         function animateOnScroll() {
             animateElements('.solution-card', 'animated');
             animateElements('.feature', 'animated');
             animateElements('.about-text', 'animated');
             animateElements('.stat', 'animated');
+            animateElements('.partner-card', 'animated');
         }
 
         function animateElements(selector, animationClass) {
@@ -858,8 +975,12 @@
             });
         }
 
+        // Initialize
+        window.addEventListener('load', () => {
+            renderPartners();
+            animateOnScroll();
+        });
         window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
 
         // Floating animation for globe
         function animateGlobe() {
