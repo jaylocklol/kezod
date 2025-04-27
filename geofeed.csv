@@ -83,8 +83,6 @@
 2600:3c0f:46::/48,IN,IN-MH,Mumbai,
 2600:3c17::/32,DE,DE-HE,Frankfurt,
 2600:3c0f:47::/48,DE,DE-HE,Frankfurt,
-2600:3c15::/32,SG,SG-SIN,Singapore,
-2600:3c0f:48::/48,SG,SG-SIN,Singapore,
 2600:3c18::/32,JP,JP-13,Tokyo,
 2600:3c0f:49::/48,JP,JP-13,Tokyo,
 2600:3c12:0c00::/40,DE,DE-BE,Berlin,
